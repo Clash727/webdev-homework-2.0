@@ -3,6 +3,7 @@
 body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
 a { color: #215c43; text-underline-offset: .2em; }
 a:focus-visible { outline: 3px solid #aa771d; outline-offset: 5px; }
+button:focus-visible, input:focus-visible { outline: 3px solid #aa771d; outline-offset: 3px; }
 .site-header, .container, .site-footer { width: min(1080px, calc(100% - 48px)); margin-inline: auto; }
 .site-header { display: flex; align-items: center; justify-content: space-between; padding-block: 28px; border-bottom: 1px solid #d7dfd6; }
 .brand { font-size: 19px; font-weight: 700; text-decoration: none; }
@@ -19,7 +20,23 @@ h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.2; letter-spacing: -.04em
 .error-page h1 { font-size: 32px; }
 .skip-link { position: absolute; top: -100px; left: 16px; padding: 12px; background: white; }
 .skip-link:focus { top: 12px; }
+.site-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.logout-form { margin: 0; }
+.button-link { padding: 0; border: 0; background: transparent; color: #215c43; font: inherit; text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+.auth-page { max-width: 440px; margin: 64px auto; padding: 32px; background: white; border: 1px solid #d7dfd6; border-radius: 8px; }
+.auth-page h1, .admin-page h1 { font-size: clamp(28px, 4vw, 36px); letter-spacing: -.02em; }
+.auth-page .eyebrow { letter-spacing: .08em; }
+.form-group { margin-block: 24px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+.form-control { width: 100%; padding: 12px; border: 1px solid #7d8b80; border-radius: 4px; font: inherit; }
+.has-error .form-control { border-color: #a52a2a; }
+.help-block { margin: 8px 0 0; color: #a52a2a; font-size: 14px; line-height: 1.6; }
+.button { padding: 12px 20px; border: 0; border-radius: 4px; background: #14532d; color: white; font: inherit; font-weight: 600; cursor: pointer; }
+.auth-page .button { width: 100%; }
+.admin-page { padding-block: 64px; }
 @media (max-width: 600px) {
     .site-header, .container, .site-footer { width: calc(100% - 32px); }
+    .site-header { gap: 16px; flex-wrap: wrap; }
+    .auth-page { margin-block: 32px; padding: 24px; }
     .intro { font-size: 18px; }
 }
