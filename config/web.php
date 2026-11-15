@@ -15,11 +15,13 @@ return yii\helpers\ArrayHelper::merge(require __DIR__ . '/common.php', [
             'cookieValidationKey' => $local['cookieValidationKey'],
             'enableCsrfValidation' => true,
         ],
-        // W05 实现 Account 后启用共享会话认证；W01 页面不访问 user 组件。
         'user' => [
             'identityClass' => app\models\Account::class,
             'loginUrl' => ['auth/login'],
             'enableAutoLogin' => false,
+        ],
+        'session' => [
+            'cookieParams' => ['httponly' => true, 'samesite' => 'Lax'],
         ],
         'errorHandler' => ['errorAction' => 'site/error'],
         'urlManager' => [
