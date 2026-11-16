@@ -9,7 +9,6 @@ use yii\helpers\Html;
 $this->title = '管理工作台';
 ?>
 <section class="admin-page">
-    <p class="eyebrow">WORLD CUP 2026 · 后台</p>
     <h1>管理工作台</h1>
     <p class="intro">你好，<?= Html::encode(Yii::$app->user->identity->display_name) ?>。</p>
     <div class="admin-entry-list">
