@@ -30,6 +30,10 @@
 .team-member-links { display:flex; flex-wrap:wrap; gap:16px 24px; margin-top:32px; padding-top:24px; border-top:1px solid #dce2ec; }
 .team-member-links a { padding-block:8px; color:#2b50b7; overflow-wrap:anywhere; }
 .team-empty { padding-block:16px; color:#64718a; }
+.team-resources { margin-top:38px; }
+.team-resources h2 { font-size:24px; margin:0 0 20px; }
+.resource-link-list { display:flex; flex-wrap:wrap; gap:14px; }
+.resource-link-list>a { display:block; padding:14px 18px; border:1px solid #d4ddec; border-radius:5px; background:#fff; color:#3057b9; font-size:13px; text-decoration:none; overflow-wrap:anywhere; max-width:100%; }
 .team-closing { display:flex; align-items:center; justify-content:space-between; gap:20px; border-top:1px solid #dce2ec; margin-top:32px; padding-top:20px; }
 .team-closing p { color:#64718a; font-size:12px; line-height:1.8; }
 @media (max-width:1000px) {

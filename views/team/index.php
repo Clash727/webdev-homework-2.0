@@ -9,6 +9,10 @@ use yii\helpers\Html;
 /** @var app\models\ProjectTeam $team */
 $this->title = '我们的团队';
 $this->registerCssFile('@web/css/team.css');
+$resourceLinks = array_filter($team->resourceLinks, static function ($link) { return $link->isPublicUrl(); });
+$allNamesArePlaceholders = $team->members !== [] && array_reduce($team->members, static function ($all, $member) {
+    return $all && (bool) preg_match('/^成员[一二三四]$/u', $member->display_name);
+}, true);
 ?>
 <section class="team-page">
     <header class="team-heading">
@@ -38,5 +42,15 @@ $this->registerCssFile('@web/css/team.css');
             </ul>
         <?php endif; ?>
     </section>
-    <div class="team-closing"><p>成员姓名暂为占位，分工按项目实际安排展示。</p><?= Html::a('查看项目分工 ↗', ['site/project'], ['class' => 'text-link']) ?></div>
+    <?php if ($resourceLinks !== []): ?>
+        <section class="team-resources" aria-labelledby="team-resources-title">
+            <h2 id="team-resources-title">团队资源</h2>
+            <div class="resource-link-list">
+                <?php foreach ($resourceLinks as $resource): ?>
+                    <?= Html::a(Html::encode($resource->title) . ' ↗', $resource->url, ['target' => '_blank', 'rel' => 'noopener noreferrer']) ?>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    <?php endif; ?>
+    <div class="team-closing"><?php if ($allNamesArePlaceholders): ?><p>成员姓名暂为占位，分工按项目实际安排展示。</p><?php endif; ?><?= Html::a('查看项目分工 ↗', ['site/project'], ['class' => 'text-link']) ?></div>
 </section>
