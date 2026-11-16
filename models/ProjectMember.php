@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string $role
  * @property string $bio
  * @property int $sort_order
+ * @property string|null $contribution_key
  * @property ProjectTeam $team
  * @property MemberLink[] $links
  */
@@ -46,6 +47,10 @@ class ProjectMember extends ActiveRecord
             ['display_name', 'string', 'max' => 80],
             ['role', 'string', 'max' => 100],
             ['bio', 'string', 'max' => 5000],
+            ['contribution_key', 'default', 'value' => null],
+            ['contribution_key', 'match', 'pattern' => '/^member-[1-4]$/D'],
+            [['project_team_id', 'contribution_key'], 'unique', 'targetAttribute' => ['project_team_id', 'contribution_key'],
+                'when' => static function ($model) { return $model->contribution_key !== null; }],
             ['project_team_id', 'exist', 'targetClass' => ProjectTeam::class, 'targetAttribute' => 'id'],
         ];
     }
@@ -53,6 +58,12 @@ class ProjectMember extends ActiveRecord
     public function getTeam(): ActiveQuery
     {
         return $this->hasOne(ProjectTeam::class, ['id' => 'project_team_id']);
+    }
+
+    public function getContribution(): ?array
+    {
+        $portfolio = require dirname(__DIR__) . '/config/portfolio.php';
+        return $portfolio[$this->contribution_key] ?? null;
     }
 
     public function getLinks(): ActiveQuery

@@ -27,6 +27,8 @@ $filters = [
         <p class="wc-note">只展示已发布的场次，未开赛的比赛不显示比分；时间统一为北京时间（UTC+08:00）。</p>
     </header>
 
+    <?= $this->render('../shared/_cup-tabs') ?>
+
     <nav class="wc-filters" aria-label="按比赛状态筛选">
         <?php foreach ($filters as $value => $label): ?>
             <?php $isActive = $status === $value; ?>

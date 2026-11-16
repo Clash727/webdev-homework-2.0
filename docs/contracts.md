@@ -66,8 +66,9 @@
 | `role` | `VARCHAR(100)` | 否 / 无 | 项目角色 / 分工 |
 | `bio` | `TEXT` | 否 / 无 | 纯文本，0–5000 字符；可为空字符串 |
 | `sort_order` | `INT UNSIGNED` | 否 / `0` | 数值越小越靠前，同值按 `id ASC` |
+| `contribution_key` | `VARCHAR(16)` | 是 / `NULL` | 稳定分工标识 `member-1` 至 `member-4`；同一团队内非空标识唯一，改名与排序不改变成果归属 |
 
-索引：`idx_project_member_team_sort(project_team_id, sort_order, id)`。公开详情必须同时属于 `our-team`，否则 404。不强制存学号、私人联系方式或头像；课程文件命名所需学号由文档归档流程管理。
+索引：`idx_project_member_team_sort(project_team_id, sort_order, id)`、`uq_member_team_contribution(project_team_id, contribution_key)`。公开详情必须同时属于 `our-team`，否则 404。不强制存学号、私人联系方式或头像；课程文件命名所需学号由文档归档流程管理。
 
 ### 2.4 member_link
 
@@ -276,6 +277,10 @@ demo-draft,2026,2026世界杯演示,DMA,演示甲队,DMB,演示乙队,演示球�
 | HTTP | 外部路径 | Yii route | 请求 / 结果 |
 | --- | --- | --- | --- |
 | GET | `/` | `site/index` | 世界杯首页，不承载课设团队主页 |
+| GET | `/project` | `site/project` | 世界杯项目与四人分工、已实现成果 |
+| GET | `/world-cup` | `world-cup/index` | 世界杯专题默认页，与赛程列表读取同一数据 |
+| GET | `/world-cup/highlights` | `world-cup-hub/highlights` | 原创封面及 FIFA 官方观看链接，无站内视频托管 |
+| GET | `/world-cup/fans` | `world-cup-hub/fans` | 仅展示已通过留言；原留言功能可用时提供提交入口 |
 | GET | `/world-cup/matches` | `world-cup/index` | `status` 可选，`page` 分页；仅已发布 |
 | GET | `/world-cup/matches/{id}` | `world-cup/view` | 公开比赛详情，草稿同缺失均 404 |
 | GET | `/team` | `team/index` | 课设团队、成员与资源链接 |
@@ -344,7 +349,7 @@ demo-draft,2026,2026世界杯演示,DMA,演示甲队,DMB,演示乙队,演示球�
 
 ## 7. 静态核对与边界样例
 
-已完成 11 张业务表、9 个外键引用、20 条路由、CSV 的 20 个字段与 3 条边界记录的静态核对，并验证 UTC 与北京时间的跨日转换。本节结果仅针对契约，不表示已执行数据库迁移或 HTTP 请求。
+已完成 11 张业务表、9 个外键引用、24 条路由、CSV 的 20 个字段与 3 条边界记录的静态核对，并验证 UTC 与北京时间的跨日转换。本节结果仅针对契约，不表示已执行数据库迁移或 HTTP 请求。
 
 | 记录 | 推导出的入库值 | 公开列表 | 详情 | 判定 |
 | --- | --- | --- | --- | --- |

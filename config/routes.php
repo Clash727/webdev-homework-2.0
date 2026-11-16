@@ -6,6 +6,10 @@
 
 return [
     '' => 'site/index',
+    'project' => 'site/project',
+    'world-cup' => 'world-cup/index',
+    'world-cup/highlights' => 'world-cup-hub/highlights',
+    'world-cup/fans' => 'world-cup-hub/fans',
     'world-cup/matches' => 'world-cup/index',
     'world-cup/matches/<id:[1-9][0-9]*>' => 'world-cup/view',
     'team' => 'team/index',
