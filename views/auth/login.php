@@ -10,9 +10,7 @@ use yii\widgets\ActiveForm;
 $this->title = '管理员登录';
 ?>
 <section class="auth-page" aria-labelledby="login-title">
-    <p class="eyebrow">WORLD CUP 2026 · 后台</p>
     <h1 id="login-title">管理员登录</h1>
-    <p class="note">使用管理员账号进入工作台。</p>
     <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
         <?= $form->field($model, 'username')->textInput(['autofocus' => true, 'autocomplete' => 'username']) ?>
         <?= $form->field($model, 'password')->passwordInput(['autocomplete' => 'current-password']) ?>

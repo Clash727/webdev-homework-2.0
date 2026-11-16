@@ -24,7 +24,6 @@ $filters = [
     <header class="wc-head">
         <p class="wc-eyebrow">2026 精选小组赛</p>
         <h1>赛程赛果</h1>
-        <p class="wc-note">只展示已发布的场次，未开赛的比赛不显示比分；时间统一为北京时间（UTC+08:00）。</p>
     </header>
 
     <?= $this->render('../shared/_cup-tabs') ?>
@@ -46,7 +45,6 @@ $filters = [
     <?php if ($fixtures === []): ?>
         <div class="wc-empty">
             <p class="wc-empty-title">暂无符合条件的比赛</p>
-            <p class="wc-note">可以切换到其他状态，或查看全部已发布场次。</p>
             <?= Html::a('查看全部', Url::to(['world-cup/index']), ['class' => 'wc-button']) ?>
         </div>
     <?php else: ?>
