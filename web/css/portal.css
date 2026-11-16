@@ -178,6 +178,7 @@ a:hover { text-decoration-thickness: 2px; }
 .wc-page .wc-scoreboard .wc-side { color: #eef4ff; }
 .wc-page .wc-badge-official { background: #edf2ff; border-color: #d0dcff; color: #35529a; }
 .auth-page { border-color: var(--line); }
+.admin-entry-list { display:flex; flex-wrap:wrap; align-items:center; gap:24px; margin-block:32px; }
 .button { background: #2148cb; }
 @media (max-width: 1050px) {
     .site-header, .container, .site-footer { width: calc(100% - 48px); }

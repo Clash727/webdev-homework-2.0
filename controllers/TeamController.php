@@ -24,7 +24,7 @@ class TeamController extends Controller
 
     public function actionIndex()
     {
-        $team = ProjectTeam::findPublic()->with('members')->one();
+        $team = ProjectTeam::findPublic()->with(['members', 'resourceLinks'])->one();
         if ($team === null) {
             throw new NotFoundHttpException('团队资料尚未准备好，请联系维护者初始化团队资料。');
         }

@@ -16,6 +16,7 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property string $summary
  * @property ProjectMember[] $members
+ * @property ProjectTeamLink[] $resourceLinks
  */
 class ProjectTeam extends ActiveRecord
 {
@@ -51,9 +52,20 @@ class ProjectTeam extends ActiveRecord
         return static::find()->where(['slug' => self::PUBLIC_SLUG]);
     }
 
+    public function attributeLabels()
+    {
+        return ['name' => '团队名称', 'summary' => '团队简介'];
+    }
+
     public function getMembers(): ActiveQuery
     {
         return $this->hasMany(ProjectMember::class, ['project_team_id' => 'id'])
+            ->orderBy(['sort_order' => SORT_ASC, 'id' => SORT_ASC]);
+    }
+
+    public function getResourceLinks(): ActiveQuery
+    {
+        return $this->hasMany(ProjectTeamLink::class, ['project_team_id' => 'id'])
             ->orderBy(['sort_order' => SORT_ASC, 'id' => SORT_ASC]);
     }
 }

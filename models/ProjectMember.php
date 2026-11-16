@@ -60,6 +60,11 @@ class ProjectMember extends ActiveRecord
         return $this->hasOne(ProjectTeam::class, ['id' => 'project_team_id']);
     }
 
+    public function attributeLabels()
+    {
+        return ['display_name' => '成员姓名', 'role' => '角色与分工', 'bio' => '个人简介', 'sort_order' => '显示顺序'];
+    }
+
     public function getContribution(): ?array
     {
         $portfolio = require dirname(__DIR__) . '/config/portfolio.php';
