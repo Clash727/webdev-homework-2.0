@@ -71,5 +71,5 @@ $isFinished = $fixture->isFinished();
         </div>
     </dl>
 
-    <p class="wc-note">本页只读，编辑与发布在后台完成。</p>
+    <p class="wc-back"><?= Html::a('探索精彩进球 →', ['world-cup-hub/highlights']) ?></p>
 </section>

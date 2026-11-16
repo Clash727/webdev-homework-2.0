@@ -1,7 +1,7 @@
 <?php
 /**
- * 用途：提供工程临时首页和统一错误页；正式世界杯首页交给 W09。
- * 作者：Clash727（W01）
+ * 用途：世界杯首页、项目分工展示与统一错误页。
+ * 作者：Clash727（工程基线）、zhixiu-feng（前台展示）
  */
 
 namespace app\controllers;
@@ -9,6 +9,8 @@ namespace app\controllers;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\ErrorAction;
+use app\models\ProjectTeam;
+use app\models\WorldCupPortal;
 
 class SiteController extends Controller
 {
@@ -17,7 +19,7 @@ class SiteController extends Controller
         return [
             'verbs' => [
                 'class' => VerbFilter::class,
-                'actions' => ['index' => ['GET']],
+                'actions' => ['index' => ['GET'], 'project' => ['GET']],
             ],
         ];
     }
@@ -29,6 +31,17 @@ class SiteController extends Controller
 
     public function actionIndex(): string
     {
-        return $this->render('index');
+        return $this->render('index', [
+            'results' => WorldCupPortal::recentResults(),
+            'team' => ProjectTeam::findPublic()->with('members')->one(),
+        ]);
+    }
+
+    public function actionProject(): string
+    {
+        return $this->render('project', [
+            'team' => ProjectTeam::findPublic()->with('members')->one(),
+            'portfolio' => require dirname(__DIR__) . '/config/portfolio.php',
+        ]);
     }
 }

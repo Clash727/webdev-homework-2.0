@@ -1,0 +1,53 @@
+/* 球衣编号式成员卡片。作者：zhixiu-feng */
+.team-page { max-width:1280px; margin-inline:auto; padding-block:48px 60px; color:#13213b; }
+.team-heading { display:grid; grid-template-columns:1fr 1.1fr; column-gap:60px; max-width:none; }
+.team-heading .eyebrow { grid-column:1/-1; margin-bottom:15px; }
+.team-heading h1 { margin:0; font-size:clamp(38px,4.8vw,62px); line-height:1.15; letter-spacing:-.05em; overflow-wrap:anywhere; }
+.team-summary { align-self:end; margin:0; color:#64718a; font-size:15px; line-height:1.9; overflow-wrap:anywhere; }
+.team-section { margin-top:42px; }
+.team-section h2 { margin:0 0 22px; font-size:24px; }
+.team-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; margin:0; padding:0; list-style:none; }
+.team-card { display:flex; flex-direction:column; padding:0; border:1px solid #dce2ec; border-radius:8px; overflow:hidden; background:#fff; }
+.team-card { --member-accent:#d5ff45; }
+.profile-02 { --member-accent:#67cafa; }
+.profile-03 { --member-accent:#ff965e; }
+.profile-04 { --member-accent:#b09bff; }
+.member-portrait { position:relative; width:100%; aspect-ratio:1.13; overflow:hidden; background:#152b50; color:var(--member-accent); }
+.member-portrait::before { content:""; position:absolute; height:90px; width:160%; top:25%; left:-30%; transform:rotate(-35deg); background:#ffffff05; border-top:1px solid #ffffff12; border-bottom:1px solid #ffffff12; }
+.member-portrait::after { content:""; position:absolute; left:0; bottom:0; width:50px; height:4px; background:var(--member-accent); }
+.jersey-outline { position:absolute; width:90%; height:92%; left:5%; top:5%; opacity:.55; }
+.portrait-number { position:absolute; top:37%; left:50%; transform:translateX(-50%); font-family:Impact,"Arial Black",sans-serif; font-size:clamp(46px,5vw,68px); line-height:1; font-weight:900; font-style:italic; letter-spacing:-.04em; }
+.member-copy { display:flex; flex-direction:column; align-items:flex-start; flex:1; width:100%; padding:24px 20px; }
+.team-card h3 { margin:0; font-size:24px; overflow-wrap:anywhere; }
+.team-role { margin:12px 0 24px; color:#64718a; font-size:13px; line-height:1.8; overflow-wrap:anywhere; }
+.team-detail-link { display:inline-block; margin-top:auto; padding-block:9px; font-size:13px; color:#2b50b7; text-decoration:none; font-weight:650; }
+.team-back { display:inline-block; margin-bottom:30px; padding-block:8px; font-size:13px; text-decoration:none; color:#3158b7; }
+.team-member-page { max-width:850px; margin-inline:auto; }
+.team-member-page .team-heading { display:block; padding-left:22px; border-left:5px solid var(--member-accent,#3158b7); }
+.team-member-page .team-heading h1 { font-size:46px; }
+.team-member-page .team-role { margin:15px 0 0; }
+.team-bio { color:#52617e; line-height:1.9; font-size:17px; overflow-wrap:anywhere; padding-top:28px; }
+.team-member-links { display:flex; flex-wrap:wrap; gap:16px 24px; margin-top:32px; padding-top:24px; border-top:1px solid #dce2ec; }
+.team-member-links a { padding-block:8px; color:#2b50b7; overflow-wrap:anywhere; }
+.team-empty { padding-block:16px; color:#64718a; }
+.team-closing { display:flex; align-items:center; justify-content:space-between; gap:20px; border-top:1px solid #dce2ec; margin-top:32px; padding-top:20px; }
+.team-closing p { color:#64718a; font-size:12px; line-height:1.8; }
+@media (max-width:1000px) {
+    .team-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .portrait-number { font-size:72px; }
+    .team-heading { gap:20px 30px; }
+}
+@media (max-width:600px) {
+    .team-page { padding-block:32px 48px; }
+    .team-heading { grid-template-columns:1fr; gap:0; }
+    .team-heading h1 { font-size:42px; }
+    .team-summary { margin-top:20px; font-size:14px; }
+    .team-grid { grid-template-columns:1fr; gap:18px; }
+    .team-section { margin-top:30px; }
+    .member-portrait { aspect-ratio:1.4; }
+    .jersey-outline { width:80%; left:10%; height:95%; }
+    .portrait-number { font-size:65px; top:38%; }
+    .member-copy { padding:24px; }
+    .team-closing { flex-direction:column; align-items:flex-start; gap:8px; }
+    .team-member-page .team-heading h1 { font-size:38px; }
+}
