@@ -6,9 +6,7 @@
 
 namespace app\models;
 
-use Yii;
 use yii\db\ActiveQuery;
-use yii\db\Query;
 
 class WorldCupPortal
 {
@@ -41,12 +39,10 @@ class WorldCupPortal
 
     public static function discussion(): array
     {
-        $tableReady = Yii::$app->db->schema->getTableSchema('{{%guest_message}}') !== null;
         return [
-            'messages' => $tableReady ? (new Query())->select(['nickname', 'body', 'created_at'])
-                ->from('{{%guest_message}}')->where(['status' => 'approved'])
-                ->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC])->limit(6)->all() : [],
-            'canSubmit' => $tableReady && class_exists('app\\controllers\\GuestbookController'),
+            'messages' => GuestMessage::findApproved()->select(['nickname', 'body', 'created_at'])
+                ->orderBy(['created_at' => SORT_DESC, 'id' => SORT_DESC])->limit(6)->asArray()->all(),
+            'canSubmit' => true,
         ];
     }
 }
