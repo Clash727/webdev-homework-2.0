@@ -13,6 +13,7 @@ use yii\widgets\LinkPager;
 /** @var string|null $status */
 
 $this->registerCssFile('@web/css/world-cup.css');
+$this->registerCssFile('@web/css/world-cup-draw.css');
 
 $filters = [
     null => '全部',
@@ -22,11 +23,11 @@ $filters = [
 ?>
 <section class="wc-page">
     <header class="wc-head">
-        <p class="wc-eyebrow">2026 精选小组赛</p>
         <h1>赛程赛果</h1>
     </header>
 
     <?= $this->render('../shared/_cup-tabs') ?>
+    <?= $this->render('_match-nav', ['active' => 'list']) ?>
 
     <nav class="wc-filters" aria-label="按比赛状态筛选">
         <?php foreach ($filters as $value => $label): ?>
@@ -74,6 +75,8 @@ $filters = [
                             <?php endif; ?>
                             <?php if ($fixture->group_name !== null && $fixture->group_name !== ''): ?>
                                 <span class="wc-badge">第 <?= Html::encode($fixture->group_name) ?> 组</span>
+                            <?php elseif ($fixture->stage !== 'group'): ?>
+                                <span class="wc-badge"><?= Html::encode($fixture->stageLabel()) ?></span>
                             <?php endif; ?>
                         </p>
                     </div>

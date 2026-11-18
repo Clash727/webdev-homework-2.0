@@ -77,18 +77,19 @@ echo "目标站点：{$base}\n\n";
 // 1. 列表页
 $list = expectStatus('列表页 200', "{$base}/world-cup/matches", 200);
 expectContains('列表页含官方样本队名 Mexico', $list, 'Mexico');
-if (countOf($list, '官方来源') !== 4) {
+if (countOf($list, '官方来源') === 0) {
     $failures++;
-    echo 'FAIL  列表页应有 4 个「官方来源」徽标，实际 ' . countOf($list, '官方来源') . "\n";
+    echo "FAIL  列表页应显示官方来源\n";
 } else {
-    echo "PASS  列表页恰好 4 个「官方来源」徽标\n";
+    echo "PASS  列表页显示官方来源\n";
 }
-if (countOf($list, 'wc-card-main') !== 4) {
+if (countOf($list, 'wc-card-main') !== 20) {
     $failures++;
-    echo 'FAIL  列表页应只有 4 张卡片，实际 ' . countOf($list, 'wc-card-main') . "\n";
+    echo 'FAIL  列表首页应展示 20 场，实际 ' . countOf($list, 'wc-card-main') . "\n";
 } else {
-    echo "PASS  列表页恰好 4 张卡片\n";
+    echo "PASS  列表首页按 20 场分页\n";
 }
+expectContains('完整赛程末页收录决赛', expectStatus('完整赛程末页 200', "{$base}/world-cup/matches?page=6", 200), '决赛');
 expectContains('列表页不泄漏草稿 demo-classroom', $list, '演示甲队', false);
 
 // 2. 筛选

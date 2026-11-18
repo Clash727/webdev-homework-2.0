@@ -33,6 +33,10 @@ class SeedController extends Controller
         'home_score', 'away_score', 'is_demo', 'source_url', 'source_checked_at',
     ];
 
+    private const BRACKET_FIELDS = [
+        'home_source', 'away_source', 'winner_side', 'decided_by', 'home_penalties', 'away_penalties',
+    ];
+
     /**
      * 导入样本数据。
      *
@@ -52,6 +56,9 @@ class SeedController extends Controller
 
         try {
             $rows = $this->readRows($path);
+            if ($file === null) {
+                $rows = array_merge($rows, $this->readRows(Yii::getAlias('@app/data/seed/world-cup-2026.csv')));
+            }
         } catch (\RuntimeException $e) {
             $this->stderr($e->getMessage() . "\n");
             return ExitCode::DATAERR;
@@ -96,7 +103,7 @@ class SeedController extends Controller
         $header[0] = preg_replace('/^\xEF\xBB\xBF/', '', (string) $header[0]);
         $header = array_map('trim', $header);
 
-        if ($header !== self::HEADER) {
+        if ($header !== self::HEADER && $header !== array_merge(self::HEADER, self::BRACKET_FIELDS)) {
             fclose($handle);
             throw new \RuntimeException(
                 "表头不匹配。\n期望：" . implode(',', self::HEADER) . "\n实际：" . implode(',', $header)
@@ -110,11 +117,11 @@ class SeedController extends Controller
             if ($cells === [null] || (count($cells) === 1 && trim((string) $cells[0]) === '')) {
                 continue; // 跳过空行
             }
-            if (count($cells) !== count(self::HEADER)) {
+            if (count($cells) !== count($header)) {
                 fclose($handle);
-                throw new \RuntimeException("第 {$lineNo} 行列数错误：期望 " . count(self::HEADER) . ' 列，实际 ' . count($cells) . ' 列。');
+                throw new \RuntimeException("第 {$lineNo} 行列数错误：期望 " . count($header) . ' 列，实际 ' . count($cells) . ' 列。');
             }
-            $row = array_combine(self::HEADER, array_map('trim', $cells));
+            $row = array_combine($header, array_map('trim', $cells));
             $rows[] = $this->normalizeRow($row, $lineNo);
         }
         fclose($handle);
@@ -208,7 +215,48 @@ class SeedController extends Controller
             'is_demo' => (int) $row['is_demo'],
             'source_url' => $row['source_url'] === '' ? null : $row['source_url'],
             'source_checked_at' => $sourceCheckedAt,
+            'bracket' => $this->normalizeBracket($row, $fail, $homeScore, $awayScore),
         ];
+    }
+
+    private function normalizeBracket(array $row, callable $fail, ?int $home, ?int $away): array
+    {
+        if (!array_key_exists('winner_side', $row)) {
+            return [];
+        }
+
+        $fields = array_map(static fn (string $value) => $value === '' ? null : $value,
+            array_intersect_key($row, array_flip(self::BRACKET_FIELDS)));
+        foreach (['home_source', 'away_source'] as $source) {
+            if ($fields[$source] !== null && !preg_match('/^(winner|loser):[A-Za-z0-9_-]{1,80}$/D', $fields[$source])) {
+                $fail("{$source} 必须是 winner:比赛键 或 loser:比赛键。");
+            }
+        }
+        if (count(array_filter($fields, static fn ($value) => $value !== null)) === 0) {
+            return $fields;
+        }
+
+        $winner = $fields['winner_side'];
+        $method = $fields['decided_by'];
+        if (!isset(Fixture::KNOCKOUT_ROUNDS[$row['stage']])
+            || ($winner !== null && (!in_array($winner, ['home', 'away'], true) || $home === null))
+            || ($method !== null && (!in_array($method, ['regular', 'extra-time', 'penalties'], true) || $winner === null))) {
+            $fail('淘汰赛轮次、胜方或决胜方式不合法。');
+        }
+        if ($method === 'penalties') {
+            $homePenalties = $this->toScore($fields['home_penalties'] ?? '');
+            $awayPenalties = $this->toScore($fields['away_penalties'] ?? '');
+            if ($home !== $away || $homePenalties === null || $awayPenalties === null || $homePenalties === $awayPenalties
+                || $winner !== ($homePenalties > $awayPenalties ? 'home' : 'away')) {
+                $fail('点球决胜须有相同的比赛比分和与胜方一致的点球比分。');
+            }
+            $fields['home_penalties'] = $homePenalties;
+            $fields['away_penalties'] = $awayPenalties;
+        } elseif ($fields['home_penalties'] !== null || $fields['away_penalties'] !== null
+            || ($winner !== null && ($home === $away || $winner !== ($home > $away ? 'home' : 'away')))) {
+            $fail('比分与决胜方式或胜方不一致。');
+        }
+        return $fields;
     }
 
     /**
@@ -280,7 +328,7 @@ class SeedController extends Controller
                     ? ($row['source_checked_at'] ?? $now)
                     : null),
                 'score_updated_at' => $scoreUpdatedAt,
-            ], false);
+            ] + $row['bracket'], false);
 
             $this->saveOrFail($fixture, $row['sample_key']);
             $stats[$isNew ? 'created' : 'updated']++;
