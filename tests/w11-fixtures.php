@@ -118,7 +118,7 @@ try {
         'away_team_id' => $teams[1]->id,
         'venue_id' => $venue->id,
         'group_name' => 'C',
-        'kickoff_at' => '2026-06-20 20:30:00',
+        'kickoff_at' => '2026-06-10 20:30:00',
         'match_status' => Fixture::STATUS_SCHEDULED,
         'home_score' => '',
         'away_score' => '',
@@ -136,13 +136,13 @@ try {
     check(str_starts_with($fixture->sample_key, 'demo-'), 'sample key is generated server side');
     check($fixture->publication_status === Fixture::PUBLICATION_DRAFT, 'new record starts as draft');
     check($fixture->match_status === Fixture::STATUS_SCHEDULED && $fixture->home_score === null, 'new record has no score');
-    check($fixture->kickoff_at === '2026-06-20 12:30:00', 'kickoff is stored as UTC');
+    check($fixture->kickoff_at === '2026-06-10 12:30:00', 'kickoff is stored as UTC');
 
     $response = request('/admin/matches/' . $fixtureId . '/edit');
-    check($response['status'] === 200 && str_contains($response['body'], '2026-06-20 20:30:00'), 'editor shows Beijing time');
+    check($response['status'] === 200 && str_contains($response['body'], '2026-06-10 20:30:00'), 'editor shows Beijing time');
     check(str_contains($response['body'], '发布'), 'draft editor offers the publish action');
 
-    $response = request('/world-cup/matches');
+    $response = request('/world-cup/matches?status=scheduled');
     check(!str_contains($response['body'], '/world-cup/matches/' . $fixtureId . '"'), 'draft is hidden from the public list');
     $response = request('/world-cup/matches/' . $fixtureId);
     check($response['status'] === 404, 'draft detail returns 404');
@@ -152,7 +152,7 @@ try {
     $fixture->refresh();
     check($fixture->publication_status === Fixture::PUBLICATION_PUBLISHED && $fixture->published_at !== null, 'published with a timestamp');
 
-    $response = request('/world-cup/matches');
+    $response = request('/world-cup/matches?status=scheduled');
     check(str_contains($response['body'], '/world-cup/matches/' . $fixtureId . '"'), 'published demo appears in the public list');
 
     $publishedAt = $fixture->published_at;

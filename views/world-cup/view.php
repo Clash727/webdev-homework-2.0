@@ -22,14 +22,14 @@ $isFinished = $fixture->isFinished();
     <header class="wc-head">
         <p class="wc-eyebrow">
             <?= Html::encode($fixture->tournament->edition) ?> ·
-            <?= Html::encode($fixture->stage === 'group' ? '小组赛' : $fixture->stage) ?><?php if ($fixture->group_name !== null && $fixture->group_name !== ''): ?> ·
+            <?= Html::encode($fixture->stageLabel()) ?><?php if ($fixture->group_name !== null && $fixture->group_name !== ''): ?> ·
                 <?= Html::encode($fixture->group_name) ?> 组<?php endif; ?>
         </p>
         <p class="wc-badges">
             <?php if ($fixture->isDemo()): ?>
                 <span class="wc-badge wc-badge-demo">演示数据</span>
             <?php else: ?>
-                <span class="wc-badge wc-badge-official">官方样本</span>
+                <span class="wc-badge wc-badge-official">官方来源</span>
             <?php endif; ?>
             <span class="wc-badge"><?= $isFinished ? '已完赛' : '未开赛' ?></span>
         </p>
@@ -44,6 +44,12 @@ $isFinished = $fixture->isFinished();
     </div>
 
     <dl class="wc-facts">
+        <?php if ($fixture->decided_by === 'penalties' || $fixture->decided_by === 'extra-time'): ?>
+            <div class="wc-fact">
+                <dt><?= $fixture->decided_by === 'penalties' ? '点球大战' : '加时赛' ?></dt>
+                <dd><?= $fixture->decided_by === 'penalties' ? (int) $fixture->home_penalties . ' : ' . (int) $fixture->away_penalties . ' · ' : '' ?><?= Html::encode(($fixture->winner_side === 'home' ? $fixture->homeTeam : $fixture->awayTeam)->name) ?> 胜出</dd>
+            </div>
+        <?php endif; ?>
         <div class="wc-fact">
             <dt>开球时间</dt>
             <dd><?= Html::encode($datetime->format('Y-m-d H:i')) ?> 北京时间 / UTC+08:00</dd>

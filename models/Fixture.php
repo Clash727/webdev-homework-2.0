@@ -49,6 +49,15 @@ class Fixture extends ActiveRecord
     public const PUBLICATION_DRAFT = 'draft';
     public const PUBLICATION_PUBLISHED = 'published';
 
+    public const KNOCKOUT_ROUNDS = [
+        'round-of-32' => '32 强',
+        'round-of-16' => '16 强',
+        'quarter-final' => '八强',
+        'semi-final' => '半决赛',
+        'final' => '决赛',
+        'third-place' => '季军赛',
+    ];
+
     /** 公开页统一使用的展示时区 */
     public const DISPLAY_TIMEZONE = 'Asia/Shanghai';
 
@@ -194,6 +203,11 @@ class Fixture extends ActiveRecord
     public function isDemo(): bool
     {
         return (int) $this->is_demo === 1;
+    }
+
+    public function stageLabel(): string
+    {
+        return $this->stage === 'group' ? '小组赛' : (self::KNOCKOUT_ROUNDS[$this->stage] ?? $this->stage);
     }
 
     /**

@@ -7,9 +7,11 @@
 namespace app\controllers;
 
 use app\models\Fixture;
-use app\models\Tournament;
+use app\models\WorldCupDraw;
+use app\models\WorldCupPortal;
 use Yii;
 use yii\data\Pagination;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -22,6 +24,14 @@ use yii\web\NotFoundHttpException;
  */
 class WorldCupController extends Controller
 {
+    public function behaviors(): array
+    {
+        return ['verbs' => ['class' => VerbFilter::class, 'actions' => [
+            'draw' => ['GET', 'HEAD'],
+            'draw-data' => ['GET', 'HEAD'],
+        ]]];
+    }
+
     /**
      * 赛程赛果列表，支持按比赛状态筛选与分页。
      *
@@ -35,11 +45,7 @@ class WorldCupController extends Controller
             throw new BadRequestHttpException('未知的比赛状态筛选，只能是 scheduled 或 finished。');
         }
 
-        $query = Fixture::findPublished()
-            ->alias('f')
-            ->innerJoin(['t' => Tournament::tableName()], 't.id = f.tournament_id')
-            ->andWhere(['t.edition' => Tournament::DEFAULT_EDITION])
-            ->with(['homeTeam', 'awayTeam', 'venue'])
+        $query = WorldCupPortal::matches()
             ->orderBy(['f.kickoff_at' => SORT_ASC, 'f.id' => SORT_ASC]);
 
         if ($status !== null) {
@@ -68,6 +74,27 @@ class WorldCupController extends Controller
         ]);
     }
 
+    public function actionDraw($view, $source = 'official'): string
+    {
+        if (!in_array($source, ['official', 'demo'], true)) {
+            throw new BadRequestHttpException('未知的赛事来源。');
+        }
+        $data = WorldCupDraw::data();
+        $key = $view === 'groups' ? 'groups' : 'knockout';
+        $this->view->title = $view === 'groups' ? '小组对阵' : '淘汰赛晋级树';
+        return $this->render('draw', [
+            'viewName' => $view,
+            'source' => $source,
+            'matches' => $data[$source][$key],
+            'hasDemo' => $data['demo'][$key] !== [],
+        ]);
+    }
+
+    public function actionDrawData(): \yii\web\Response
+    {
+        return $this->asJson(WorldCupDraw::data());
+    }
+
     /**
      * 单场比赛详情；草稿、非本期届次与不存在统一 404。
      *
@@ -75,11 +102,9 @@ class WorldCupController extends Controller
      */
     public function actionView($id)
     {
-        $fixture = Fixture::findPublished()
-            ->alias('f')
-            ->innerJoin(['t' => Tournament::tableName()], 't.id = f.tournament_id')
-            ->andWhere(['t.edition' => Tournament::DEFAULT_EDITION, 'f.id' => (int) $id])
-            ->with(['homeTeam', 'awayTeam', 'venue', 'tournament'])
+        $fixture = WorldCupPortal::matches()
+            ->andWhere(['f.id' => (int) $id])
+            ->with('tournament')
             ->one();
 
         if ($fixture === null) {

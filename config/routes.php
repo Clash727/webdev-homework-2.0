@@ -12,6 +12,8 @@ return [
     'world-cup/fans' => 'world-cup-hub/fans',
     'world-cup/matches' => 'world-cup/index',
     'world-cup/matches/<id:[1-9][0-9]*>' => 'world-cup/view',
+    'world-cup/<view:groups|bracket>' => 'world-cup/draw',
+    'world-cup/draw-data' => 'world-cup/draw-data',
     'team' => 'team/index',
     'team/members/<id:[1-9][0-9]*>' => 'team/member',
     'GET guestbook' => 'guestbook/index',

@@ -21,3 +21,5 @@
 PHP 需启用 `ctype`、`mbstring`、`openssl`、`PDO` 和 `pdo_mysql` 扩展。
 
 安装、启动与验收步骤见 [W01 工程初始化与验收](docs/w01-validation.md)。
+
+导入 2026 世界杯官方赛程及赛果：完成迁移后运行 `php yii seed/fixtures`。小组对阵与淘汰赛接口见 [赛事对阵说明](docs/fixture-draw.md)。
