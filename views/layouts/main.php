@@ -14,7 +14,7 @@ $navigation = [
     ['主页', ['site/index'], $route === 'site/index'],
     ['团队成员', ['team/index'], str_starts_with($route, 'team/')],
     ['项目经历', ['site/project'], $route === 'site/project'],
-    ['世界杯专题', ['world-cup/index'], str_starts_with($route, 'world-cup/') || str_starts_with($route, 'world-cup-hub/')],
+    ['世界杯专题', ['world-cup/index'], str_starts_with($route, 'world-cup/') || str_starts_with($route, 'world-cup-hub/') || str_starts_with($route, 'guestbook/')],
     ['作业下载', ['download/index'], $route === 'download/index'],
 ];
 ?>

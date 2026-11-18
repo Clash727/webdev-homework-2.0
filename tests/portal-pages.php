@@ -46,12 +46,13 @@ function document(string $html): DOMXPath
 }
 try {
     foreach (['/' => '主页', '/team' => '团队成员', '/project' => '项目经历',
-        '/world-cup' => '世界杯专题', '/world-cup/highlights' => '世界杯专题', '/world-cup/fans' => '世界杯专题'] as $path => $active) {
+        '/world-cup' => '世界杯专题', '/world-cup/highlights' => '世界杯专题', '/world-cup/fans' => '世界杯专题',
+        '/guestbook' => '世界杯专题'] as $path => $active) {
         [$status, $html] = fetchPage($path);
         verify($status === 200, $path . ' 正常打开');
         $dom = document($html);
         $nav = $dom->query('//nav[@aria-label="主导航"]/a');
-        verify($nav->length === 4, $path . ' 包含四个一级导航');
+        verify($nav->length === 5, $path . ' 包含五个一级导航（含作业下载）');
         $current = $dom->query('//nav[@aria-label="主导航"]/a[@aria-current="page"]');
         verify($current->length === 1 && trim($current[0]->textContent) === $active, $path . ' 当前导航正确');
         verify($dom->query('//h1')->length === 1, $path . ' 具有唯一主标题');
